@@ -93,23 +93,18 @@
   .lead { font-size: 18px; line-height: 1.6; color: var(--body); text-wrap: pretty; }
   .small { font-size: 14px; line-height: 1.55; color: var(--body-subtle); }
 
-  /* Scroll-driven aurora: a tall vertical spectrum of palette hues that scrolls through
-     the viewport, so the dominant background color shifts teal → cyan → sky → purple as you go down. */
+  /* Uniform aurora: a fixed field of soft palette blooms that stays put on scroll,
+     so the same glossy wash shows through every section (sections are transparent). */
   .aurora { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
   .aurora::before {
-    content: ""; position: absolute; left: -25%; right: -25%; top: -60%; height: 320%;
+    content: ""; position: absolute; inset: 0;
     background:
-      linear-gradient(180deg,
-        color-mix(in srgb, var(--brand) 30%, transparent) 0%,
-        color-mix(in srgb, var(--acc-c) 28%, transparent) 28%,
-        color-mix(in srgb, var(--acc-b) 26%, transparent) 52%,
-        color-mix(in srgb, var(--acc-d) 28%, transparent) 76%,
-        color-mix(in srgb, var(--brand) 30%, transparent) 100%),
-      radial-gradient(40% 16% at 70% 40%, color-mix(in srgb, var(--acc-b) 22%, transparent), transparent 70%);
-    filter: blur(48px); opacity: .42;
-    transform: translate3d(0, calc(var(--sy, 0) * -62%), 0);
-    transition: transform .15s linear;
+      radial-gradient(42% 42% at 14% 12%, color-mix(in srgb, var(--brand) 26%, transparent), transparent 62%),
+      radial-gradient(40% 40% at 84% 28%, color-mix(in srgb, var(--acc-b) 22%, transparent), transparent 60%),
+      radial-gradient(46% 46% at 50% 82%, color-mix(in srgb, var(--acc-c) 22%, transparent), transparent 64%);
+    filter: blur(72px); opacity: .95;
   }
+  [data-theme="dark"] .aurora::before { opacity: .55; }
   /* content sits above the aurora */
   nav, section, footer { position: relative; z-index: 1; }
 
@@ -549,7 +544,7 @@
 </section>
 
 <!-- Edge -->
-<section id="edge" style="background: var(--neutral-primary-soft);">
+<section id="edge">
   <div class="container">
     <div class="edge-grid">
       <div class="reveal">
@@ -651,7 +646,7 @@
 </section>
 
 <!-- Who is building it -->
-<section id="about" style="background: var(--neutral-primary-soft);">
+<section id="about">
   <div class="container">
     <div class="section-head reveal" style="margin-bottom: 0;">
       <span class="eyebrow">Who is building it</span>
@@ -725,21 +720,6 @@
         btn.setAttribute('aria-expanded', 'false');
       });
     });
-  })();
-
-  // Scroll-driven aurora hue — map scroll progress (0..1) to a CSS var the aurora reads.
-  (function () {
-    if (reduce) return; // static tint under reduced motion
-    var root = document.documentElement, ticking = false;
-    function update() {
-      var max = document.body.scrollHeight - window.innerHeight;
-      root.style.setProperty('--sy', max > 0 ? (window.scrollY / max).toFixed(4) : '0');
-      ticking = false;
-    }
-    window.addEventListener('scroll', function () {
-      if (!ticking) { ticking = true; requestAnimationFrame(update); }
-    }, { passive: true });
-    update();
   })();
 
   // Scroll reveal — one-time entrance (native IntersectionObserver).
