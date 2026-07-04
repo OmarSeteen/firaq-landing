@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Firaq — Cross-squad command center for Scrum Masters</title>
+<title>Firaq · Cross-squad command center for Scrum Masters & PMs</title>
 <meta name="description" content="Run 2+ squads? See every standup, blocker, and retro in one place. Priced in EGP, a fraction of the USD tools.">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -20,7 +20,7 @@
   })();
 </script>
 <style>
-  /* ---- Firaq color tokens (New Design system/colors.md) — the ONLY thing taken from the design system ---- */
+  /* ---- Firaq color tokens (Design system/colors.md) — the ONLY thing taken from the design system ---- */
   :root {
     --neutral-primary: #FFFFFF; --neutral-primary-soft: #F8FAFC;
     --neutral-secondary-medium: #FFFFFF; --neutral-tertiary-medium: #CBD5E1;
@@ -443,9 +443,9 @@
   <div class="container">
     <div class="hero-grid">
       <div class="hero-copy">
-        <span class="eyebrow">For Scrum Masters running 2+ squads</span>
-        <h1>Every squad's standup, <span class="grad">on one screen</span>.</h1>
-        <p class="lead">Firaq pulls every team's update into one view, blockers first, and tells you where to look before the call starts. Billed in EGP, a fraction of the USD tools.</p>
+        <span class="eyebrow">For Scrum Masters and PMs running 2+ squads</span>
+        <h1>Shorter standups. <span class="grad">The whole sprint in view.</span></h1>
+        <p class="lead">Teams write status before the call, so the meeting is blockers, not roll-call. Standups, blockers, and retros for every squad land on one board and stay searchable. Billed in EGP, a fraction of the USD tools.</p>
         <!-- LAUNCH SWAP: becomes "Start free" → org onboarding once signup exists -->
         <a href="#waitlist" class="btn btn-brand btn-lg">Join the waitlist</a>
         <p class="small form-note">
@@ -550,7 +550,7 @@
     <div class="edge-grid">
       <div class="reveal">
         <span class="eyebrow">The Firaq edge</span>
-        <h2>It reads your standups. Other tools just store them.</h2>
+        <h2>It reads your standups. Other tools store them.</h2>
         <div class="edge-feat" style="margin-top: 26px;">
           <h3>A brief in your inbox every morning</h3>
           <p>Firaq reads every squad's update and hands you one short brief: what is blocked, what slipped, who needs you today. Forward it as-is; it doubles as the status-up you owe your manager.</p>
@@ -565,7 +565,7 @@
           <div class="brief-head"><span class="mark">Firaq</span><span>· Daily brief</span><span class="when">Sun 12 Jan</span></div>
           <div class="brief-body">
             <div class="kicker">2 blockers need you today</div>
-            <div class="brief-item"><span class="b-dot"></span><div><b>Nasr</b> — Omar is blocked on auth. Second day, no owner assigned yet.</div></div>
+            <div class="brief-item"><span class="b-dot"></span><div><b>Nasr</b>: Omar is blocked on auth. Second day, no owner assigned yet.</div></div>
             <div class="brief-item"><span class="b-dot"></span><div><b>Nasr</b> is waiting on <span class="link">Fajr</span> to ship auth before it can move.<span class="brief-tag">cross-squad</span></div></div>
             <div class="brief-foot">Participation today · Nasr 4/5 · Fajr 3/4. Nour missing two days running.</div>
           </div>
@@ -581,7 +581,7 @@
     <div class="section-head reveal">
       <span class="eyebrow">The bill</span>
       <h2>The same team, a fraction of the cost.</h2>
-      <p class="lead">Per-user USD tools add up fast. Firaq is priced per squad, in Egyptian pounds.</p>
+      <p class="lead">Per-user USD tools add up fast. Firaq charges per squad, in Egyptian pounds.</p>
     </div>
     <div class="compare reveal">
       <div class="compare-card them">
@@ -662,7 +662,7 @@
   <div class="container">
     <div class="cta-wrap reveal">
       <h2>Get in with the first squads.</h2>
-      <p class="lead" style="margin: 14px auto 0;">Leave your email. We open early access to a small first group of Scrum Masters in Egypt.</p>
+      <p class="lead" style="margin: 14px auto 0;">Leave your email. We open early access to a small first group of Scrum Masters and PMs in Egypt.</p>
       <!-- LAUNCH SWAP: waitlist form + Formspree JS come out; replace with a "Start free" button to org onboarding -->
       <form class="waitlist" action="https://formspree.io/f/xnjkovpj" method="POST">
         <label for="cta-email" class="sr-only">Email address</label>
@@ -806,7 +806,7 @@
       var btn = form.querySelector('button');
       if (btn) { btn.disabled = true; btn.textContent = 'Joining…'; }
       fetch(form.action, { method: 'POST', body: new FormData(form), headers: { Accept: 'application/json' } })
-        .then(function (r) { form.reset(); if (msg) msg.textContent = r.ok ? 'Thanks — you are on the list.' : 'Something went wrong. Try again.'; })
+        .then(function (r) { form.reset(); if (msg) msg.textContent = r.ok ? 'Thanks, you are on the list.' : 'Something went wrong. Try again.'; })
         .catch(function () { if (msg) msg.textContent = 'Network error. Try again.'; })
         .finally(function () { if (btn) { btn.disabled = false; btn.textContent = 'Join the waitlist'; } });
     });
