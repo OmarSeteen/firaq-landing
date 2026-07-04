@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Firaq">
+  <rect width="32" height="32" rx="8" fill="#0F766E"/>
+  <g fill="#fff">
+    <rect x="11" y="8" width="4" height="16" rx="1"/>
+    <rect x="11" y="8" width="11" height="4" rx="1"/>
+    <rect x="11" y="14.5" width="8.5" height="3.8" rx="1"/>
+  </g>
+</svg>
