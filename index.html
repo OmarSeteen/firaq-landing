@@ -185,6 +185,11 @@
     transform: skewX(-18deg); transition: left .55s ease; }
   .btn-brand:hover::after { left: 130%; }
   .btn-lg { padding: 13px 24px; font-size: 16px; border-radius: 14px; }
+  /* Secondary action beside the brand CTA. Brand-colored border rather than a neutral one:
+     --border-default-medium is ~1.5:1 on white, under the 3:1 WCAG 2.2 floor for control
+     boundaries (SC 1.4.11), while --border-brand clears it and reads as clearly secondary. */
+  .btn-ghost { color: var(--fg-brand); background: transparent; border-color: var(--border-brand); }
+  .btn-ghost:hover { background: color-mix(in srgb, var(--brand) 8%, transparent); transform: translateY(-1px); }
 
   /* Waitlist form (ux: input-labels, input-type, submit-feedback) */
   .waitlist { display: flex; gap: 10px; max-width: 440px; flex-wrap: wrap; }
@@ -303,16 +308,34 @@
   .brief-foot { margin-top: 6px; padding-top: 12px; border-top: 1px solid var(--border-default); font-size: 12.5px; color: var(--body-subtle); }
 
   /* Pricing */
-  .pricing-grid { display: grid; gap: 20px; grid-template-columns: 1fr; align-items: start; }
-  @media (min-width: 860px) { .pricing-grid { grid-template-columns: repeat(3, 1fr); } }
-  .tier { position: relative; text-align: center; transition: transform .2s ease, box-shadow .2s ease; }
+  /* Every card is the same height and its footer action sits on one line across the row: the grid
+     stretches, each card is a flex column, and the feature list takes the slack. Without this the
+     four cards end at four different heights and the CTAs stagger down the page. */
+  .pricing-grid { display: grid; gap: 20px; grid-template-columns: 1fr; align-items: stretch; }
+  @media (min-width: 720px) { .pricing-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1080px) { .pricing-grid { grid-template-columns: repeat(4, 1fr); } }
+  .tier { position: relative; text-align: center; display: flex; flex-direction: column;
+    transition: transform .2s ease, box-shadow .2s ease; }
   .tier .price-row { justify-content: center; }
-  .tier ul { display: inline-block; text-align: left; }   /* center the block, keep checkmarks aligned in a column */
+  .tier ul { width: 100%; text-align: left; flex: 1 1 auto; }
   .tier:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
-  .tier-name { font-size: 13px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--fg-brand); }
-  .price-row { display: flex; align-items: baseline; gap: 7px; margin: 10px 0 18px; }
+  /* Fixed row height so a "Soon" chip on some tiers can't shift their price down a few pixels
+     relative to the tiers without one. */
+  .tier-name { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 26px;
+    font-size: 13px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--fg-brand); }
+  .price-row { display: flex; align-items: baseline; justify-content: center; gap: 7px;
+    margin: 10px 0 18px; min-height: 50px; flex-wrap: nowrap; }
   .price { font-weight: 800; font-size: 38px; color: var(--heading); letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
-  .price-usd { color: var(--body-subtle); font-size: 13px; }
+  .price-usd { color: var(--body-subtle); font-size: 13px; white-space: nowrap; }
+  /* Scale shows no number. A floor price ("from 1900") wrapped the unit onto a second line in the
+     four-column layout and put a figure on the one card whose whole point is a conversation. The
+     1,900 EGP floor still governs the quote — it lives in the PRD, not on the card. */
+  .price-custom { font-size: 30px; }
+  .tier .btn { margin-top: 20px; width: 100%; }
+  /* Tiers that can't be bought yet still need a footer block, or their cards end short and the
+     row of CTAs staggers. Same box as a button, deliberately not clickable. */
+  .tier-note { margin-top: 20px; padding: 11px 20px; border-radius: 12px; font-size: 14px; font-weight: 600;
+    color: var(--body-subtle); background: var(--neutral-primary-soft); border: 1px dashed var(--border-default-medium); }
   .tier ul { list-style: none; }
   .tier li { padding: 7px 0; font-size: 14.5px; display: flex; gap: 9px; align-items: flex-start; color: var(--body); }
   .tier li svg { color: var(--fg-brand); flex: none; margin-top: 3px; }
@@ -321,6 +344,17 @@
   .badge { position: absolute; top: -11px; left: 50%; transform: translateX(-50%); background: var(--brand); color: var(--text-on-primary);
     font-size: 11px; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase; padding: 4px 11px; border-radius: 9999px; }
   .pricing-note { margin-top: 22px; max-width: 620px; margin-left: auto; margin-right: auto; text-align: center; }
+  /* The trial is the conversion mechanism (PRD 7a-iii), so it sits above the cards in its own
+     tinted band rather than as a third lead paragraph a scanning visitor reads past. */
+  .trial-banner { max-width: 700px; margin: 0 auto 32px; padding: 16px 22px; text-align: center;
+    font-size: 15px; line-height: 1.65; color: var(--body); text-wrap: pretty;
+    background: var(--brand-softer); border: 1px solid var(--border-brand); border-radius: 16px; }
+  .trial-banner strong { color: var(--heading); }
+  /* "Soon" chip: the paid tiers are priced but not yet chargeable, so they say so on the card
+     rather than in small print underneath, where a scanning visitor would miss it. */
+  .soon { display: inline-block; margin-left: 8px; font-size: 10.5px; font-weight: 700; letter-spacing: 0.04em;
+    text-transform: uppercase; padding: 3px 8px; border-radius: 9999px; vertical-align: middle;
+    background: var(--warning-soft); color: var(--fg-warning); }
 
   /* Works-with-Slack badge (official Slack mark) */
   .slack-badge { display: inline-flex; align-items: center; gap: 8px; margin-top: 18px;
@@ -441,7 +475,7 @@
       </div>
     </div>
     <div class="nav-controls">
-      <!-- LAUNCH SWAP: replace with "Log in" + "Sign up" links once multi-tenancy + self-serve onboarding ship -->
+      <!-- LAUNCH SWAP: replace with "Log in" + "Sign up" links once the pilot ends (Phase 4) -->
       <a href="#waitlist" class="nav-cta">Join the waitlist</a>
       <button class="theme-toggle" aria-label="Toggle light and dark theme">
         <svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
@@ -461,12 +495,12 @@
       <div class="hero-copy">
         <span class="eyebrow">For Scrum Masters and PMs running 2+ squads</span>
         <h1>Shorter standups.<br><span class="grad">The whole sprint in view.</span></h1>
-        <p class="lead">Teams write status before the call, so the meeting is blockers, not roll-call. Standups, blockers, and retros for every squad land on one board and stay searchable. Billed in EGP, a fraction of the USD tools.</p>
-        <!-- LAUNCH SWAP: becomes "Start free" → org onboarding once signup exists -->
+        <p class="lead">Teams write status before the call, so the meeting is blockers, not roll-call. Standups, blockers, and retros for every squad land on one board and stay searchable. Priced in EGP, a fraction of the USD tools.</p>
+        <!-- LAUNCH SWAP: becomes "Start free" → org onboarding once the pilot ends (Phase 4) -->
         <a href="#waitlist" class="btn btn-brand btn-lg">Join the waitlist</a>
         <p class="small form-note">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-          Free early access. One email when it opens.
+          Every team starts with 30 days of Starter. All features, free, no card.
         </p>
         <span class="slack-badge">
           <svg viewBox="0 0 122.8 122.8" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M25.8 77.6a12.9 12.9 0 1 1-12.9-12.9h12.9v12.9z" fill="#E01E5A"/><path d="M32.3 77.6a12.9 12.9 0 0 1 25.8 0v32.3a12.9 12.9 0 0 1-25.8 0V77.6z" fill="#E01E5A"/><path d="M45.2 25.8a12.9 12.9 0 1 1 12.9-12.9v12.9H45.2z" fill="#36C5F0"/><path d="M45.2 32.3a12.9 12.9 0 0 1 0 25.8H12.9a12.9 12.9 0 0 1 0-25.8h32.3z" fill="#36C5F0"/><path d="M97 45.2a12.9 12.9 0 1 1 12.9 12.9H97V45.2z" fill="#2EB67D"/><path d="M90.5 45.2a12.9 12.9 0 0 1-25.8 0V12.9a12.9 12.9 0 0 1 25.8 0v32.3z" fill="#2EB67D"/><path d="M77.6 97a12.9 12.9 0 1 1-12.9 12.9V97h12.9z" fill="#ECB22E"/><path d="M77.6 90.5a12.9 12.9 0 0 1 0-25.8h32.3a12.9 12.9 0 0 1 0 25.8H77.6z" fill="#ECB22E"/></svg>
@@ -527,7 +561,7 @@
       <div class="card reveal" style="--d:.16s">
         <div class="icon-tile tile-c" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg></div>
         <h3>The whole sprint cycle</h3>
-        <p>Standup, planning poker, and retro in one tool. Shared boards, custom forms, carry-over action items. Priced per squad, not per head.</p>
+        <p>Standup, planning poker, and retro in one tool. Shared boards, a form you build per squad, and action items that carry into the next sprint.</p>
       </div>
       <div class="card reveal" style="--d:.24s">
         <div class="icon-tile tile-d" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v5h5"/><path d="M3.05 13A9 9 0 1 0 6 5.3L3 8"/><path d="M12 7v5l4 2"/></svg></div>
@@ -549,7 +583,7 @@
       <div class="step reveal">
         <div class="n">1</div>
         <h3>The team writes it down</h3>
-        <p>Two minutes in the browser or straight from Slack: yesterday, today, and anything blocking them. One entry per person per day.</p>
+        <p>Two minutes in the browser: yesterday, today, and anything blocking them. One entry per person per day, and resubmitting updates it instead of adding a duplicate.</p>
       </div>
       <div class="step reveal" style="--d:.08s">
         <div class="n">2</div>
@@ -559,7 +593,7 @@
       <div class="step reveal" style="--d:.16s">
         <div class="n">3</div>
         <h3>The call gets shorter</h3>
-        <p>Less status-reading, more unblocking. And every update stays as a searchable record you never had before.</p>
+        <p>Less status-reading, more unblocking. Share your screen with the big-text present view and walk the board together. Every update stays a searchable record you never had before.</p>
       </div>
     </div>
   </div>
@@ -571,19 +605,27 @@
     <div class="edge-grid">
       <div class="reveal">
         <span class="eyebrow">The Firaq edge</span>
-        <h2>It reads your standups. Other tools store them.</h2>
+        <h2>It flags what you would have missed.</h2>
         <div class="edge-feat" style="margin-top: 26px;">
-          <h3>A brief in your inbox every morning</h3>
-          <p>Firaq reads every squad's update and hands you one short brief: what is blocked, what slipped, who needs you today. Forward it as-is; it doubles as the status-up you owe your manager.</p>
+          <h3>Blocker radar</h3>
+          <p>When someone writes that they are waiting on another squad, Firaq spots that squad's name in the blocker and tags it in your feed. The dependency between two teams stops living inside one person's head.</p>
         </div>
         <div class="edge-feat">
-          <h3>Blocker radar, on Growth</h3>
-          <p>It catches the cross-squad dependencies, where one team is waiting on another, and a squad health score tracks how each team trends over time. The deeper read for when you juggle more teams.</p>
+          <h3>Squad health, sprint over sprint</h3>
+          <p>Blocker rate, participation, and how many action items carry over, charted across the last four quarters of closed sprints, with a health score for each squad. You read the trend and draw your own conclusion.</p>
+        </div>
+        <div class="edge-feat">
+          <h3>A daily brief <span class="soon">Soon</span></h3>
+          <p>Next up: Firaq reads every squad's update and writes one short brief covering what is blocked, what slipped, and who needs you today. It doubles as the status-up you owe your own manager.</p>
+        </div>
+        <div class="edge-feat">
+          <h3>AI stays optional</h3>
+          <p>The daily brief runs when you turn it on. Until then your team's standups never leave Firaq, and no AI vendor sees a word of them.</p>
         </div>
       </div>
       <div class="reveal" style="--d:.1s">
-        <div class="brief" role="img" aria-label="Example of Firaq's daily AI brief listing two blockers and participation">
-          <div class="brief-head"><span class="mark">Firaq</span><span>· Daily brief</span><span class="when">Sun 12 Jan</span></div>
+        <div class="brief" role="img" aria-label="Preview of the daily brief, a feature still being built: two blockers and today's participation">
+          <div class="brief-head"><span class="mark">Firaq</span><span>· Daily brief</span><span class="soon">Soon</span><span class="when">Sun 12 Jan</span></div>
           <div class="brief-body">
             <div class="kicker">2 blockers need you today</div>
             <div class="brief-item"><span class="b-dot"></span><div><b>Nasr</b>: Omar is blocked on auth. Second day, no owner assigned yet.</div></div>
@@ -607,18 +649,18 @@
     <div class="compare reveal">
       <div class="compare-card them">
         <span class="compare-tag">Per-user USD tool</span>
-        <div class="compare-num">~$168<small> / mo</small></div>
-        <div class="compare-sub">3 squads · ~24 people · at $7 per user</div>
+        <div class="compare-num">~$160<small> / mo</small></div>
+        <div class="compare-sub">4 squads · 20 people · at $8 per user</div>
       </div>
       <div class="compare-vs">vs</div>
       <div class="compare-card us">
         <span class="compare-tag">Firaq Starter</span>
         <div class="compare-num">500<small> EGP / mo</small></div>
-        <div class="compare-sub">4 squads · about $8 · billed in EGP</div>
-        <span class="compare-save">Save over 90%</span>
+        <div class="compare-sub">4 squads · billed in EGP</div>
+        <span class="compare-save">About 95% less</span>
       </div>
     </div>
-    <p class="small" style="text-align:center;margin:16px auto 0;max-width:640px;color:var(--body-subtle);">Illustrative, based on public per-user pricing. Your figure depends on team size.</p>
+    <p class="small" style="text-align:center;margin:16px auto 0;max-width:640px;color:var(--body-subtle);">Illustrative, based on published per-user pricing. Your figure depends on team size. The few per-team tools abroad still run over 1,000 EGP per team, and they do not do standups.</p>
   </div>
 </section>
 
@@ -628,42 +670,57 @@
     <div class="section-head reveal">
       <span class="eyebrow">Pricing</span>
       <h2>Per squad, in Egyptian pounds.</h2>
-      <p class="lead">The USD tools charge per user. Firaq charges per squad, in EGP. A 4-squad team pays a fraction of the equivalent USD plan.</p>
+      <p class="lead">Most tools in this category charge per user, so the bill grows with headcount. Firaq charges per squad, in EGP. A 4-squad team pays a fraction of the equivalent USD plan.</p>
     </div>
+    <p class="trial-banner reveal"><strong>Every new team starts on 30 days of Starter, free.</strong> Planning poker, Slack, and the AI digest if you want it, no card required. When the trial ends you either continue on Starter or land on the Free plan, and everything you recorded stays yours to read.</p>
     <div class="pricing-grid">
-      <div class="card tier reveal">
+      <div class="card tier featured reveal">
+        <span class="badge">Start here</span>
         <span class="tier-name">Free</span>
         <div class="price-row"><span class="price" data-count="0">0</span><span class="price-usd">EGP / month</span></div>
         <ul>
-          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Up to 2 squads</li>
-          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Standup, retro, cross-squad view</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>One squad, no time limit</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Standup and sprint retro</li>
           <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Slack reminders</li>
-          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>On the web platform</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>You land here after 30 days of Starter, not before</li>
         </ul>
+        <a class="btn btn-brand" href="#waitlist">Join the waitlist</a>
       </div>
-      <div class="card tier featured reveal" style="--d:.08s">
-        <span class="badge">Most popular</span>
-        <span class="tier-name">Starter</span>
+      <div class="card tier reveal" style="--d:.08s">
+        <span class="tier-name">Starter <span class="soon">Soon</span></span>
         <div class="price-row"><span class="price" data-count="500">500</span><span class="price-usd">EGP / month</span></div>
         <ul>
           <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Up to 4 squads</li>
-          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Planning poker</li>
-          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>AI daily digest</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>The cross-squad board</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Planning poker and AI daily digest</li>
           <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Full Slack: submit and collect in Slack</li>
         </ul>
+        <span class="tier-note">Yours free for 30 days</span>
       </div>
       <div class="card tier reveal" style="--d:.16s">
-        <span class="tier-name">Growth</span>
+        <span class="tier-name">Growth <span class="soon">Soon</span></span>
         <div class="price-row"><span class="price" data-count="1100">1100</span><span class="price-usd">EGP / month</span></div>
         <ul>
           <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Up to 10 squads</li>
           <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Everything in Starter</li>
-          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Blocker radar</li>
-          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Squad health score</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Blocker radar and squad health score</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Sprint history and quarterly trend lines</li>
         </ul>
+        <span class="tier-note">Coming soon</span>
+      </div>
+      <div class="card tier reveal" style="--d:.24s">
+        <span class="tier-name">Scale</span>
+        <div class="price-row"><span class="price price-custom">Custom</span></div>
+        <ul>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>20 squads and up</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Everything in Growth</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Scoped to your squad count</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>A direct line to the person building it</li>
+        </ul>
+        <a class="btn btn-ghost" href="mailto:hello@firaq.space?subject=Firaq%20Scale%20plan">Contact us</a>
       </div>
     </div>
-    <p class="small pricing-note reveal">Every squad includes up to 10 members. Larger squads add +25 EGP per extra active member. Prices are early hypotheses. Join the waitlist to help set them.</p>
+    <p class="small pricing-note reveal">Pay yearly and get two months free: Starter 5,000 EGP a year, Growth 11,000 EGP a year. Every squad includes up to 10 members; larger squads add +25 EGP per extra active member. <strong>The paid tiers aren't switched on yet.</strong> Start free today and we will tell you before anything costs money.</p>
   </div>
 </section>
 
@@ -696,13 +753,13 @@
         <summary>How is pricing different from Slack tools like Geekbot?
           <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
         </summary>
-        <p class="faq-a">Those tools price per user. Firaq prices per squad. A 20-person org split into 4 squads pays one squad-based fee, not 20 separate seats, and settles in EGP instead of USD.</p>
+        <p class="faq-a">Geekbot and most of the category charge per user, so a 20-person org pays for 20 seats. Firaq charges per squad: the same org split into 4 squads pays one squad-based fee and settles in EGP. The few per-team tools abroad still price above 1,000 EGP per team, and they do not run standups.</p>
       </details>
       <details class="faq-item">
         <summary>Can I sign up right now?
           <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
         </summary>
-        <p class="faq-a">Self-serve signup is already built. Public access opens with launch. Join the waitlist and you will be first in when it does.</p>
+        <p class="faq-a">Self-serve signup is built and running. Public access opens with launch, and every new organization lands on 30 days of Starter. Join the waitlist to be in the first group.</p>
       </details>
       <details class="faq-item">
         <summary>Does Firaq work with Slack?
@@ -717,10 +774,10 @@
         <p class="faq-a">Yes. Every squad and every organization is isolated at the query level, not just hidden in the UI. A member sees only their own squad; a cross-squad or cross-org request is rejected outright.</p>
       </details>
       <details class="faq-item">
-        <summary>What happens after I join the waitlist?
+        <summary>What happens when the 30 days end?
           <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
         </summary>
-        <p class="faq-a">We email you once, when early access opens to the first group of Scrum Masters and PMs in Egypt. No spam, no drip campaign.</p>
+        <p class="faq-a">You drop to the free tier, not to a paywall. Your extra squads become read-only and you keep every standup, retro, and sprint you recorded. Nothing is deleted, and you can pick up where you left off whenever you upgrade.</p>
       </details>
     </div>
   </div>
@@ -764,6 +821,8 @@
   })();
 
   // Light / dark theme toggle — flips the attribute the pre-paint script set, and remembers it.
+  // This page is a standalone static file with no access to the app's static/js/app.js, so the
+  // handler lives here rather than being shared.
   (function () {
     var btn = document.querySelector('.theme-toggle');
     if (!btn) return;
@@ -869,7 +928,6 @@
   // ponytail: Formspree handles storage/anti-spam until signups justify our own backend.
   document.querySelectorAll('.waitlist').forEach(function (form) {
     form.addEventListener('submit', function (e) {
-      if (form.action.indexOf('YOUR_FORM_ID') !== -1) return;
       e.preventDefault();
       var msg = document.getElementById('form-msg');
       var btn = form.querySelector('button');
