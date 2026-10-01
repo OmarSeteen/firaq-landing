@@ -11,10 +11,11 @@
 <!-- Font: Plus Jakarta Sans (ui-ux-pro-max "Friendly SaaS" pairing). Colors: Firaq design tokens only. -->
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script>
-  // Set theme before paint (no flash). Stored choice wins; otherwise follow the OS.
+  // Set theme before paint (no flash). Stored choice wins; otherwise light. The OS preference
+  // is ignored on purpose: dark is opt-in via the toggle.
   (function () {
     try {
-      var t = localStorage.getItem('firaq-theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      var t = localStorage.getItem('firaq-theme') || 'light';
       document.documentElement.setAttribute('data-theme', t);
     } catch (e) { document.documentElement.setAttribute('data-theme', 'light'); }
   })();
